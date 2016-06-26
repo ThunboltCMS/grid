@@ -1,0 +1,9 @@
+{
+	"name": "thunbolt/grid",
+	"require": {
+		"ublaboo/datagrid": "^4.3.1"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	}
+}

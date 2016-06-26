@@ -1,0 +1,72 @@
+{**
+ * @param array    $columns           Available columns
+ * @param array    $actions           Available actions
+ * @param array    $exports           Available exports
+ * @param array    $filters           Available filters
+ * @param Form     $filter            Walkaround for latte (does not know $form in snippet in foreach, etc)
+ * @param Row[]    $rows              List of rows (each contain a item from data source)
+ * @param DataGrid $control           Parent (DataGrid)
+ * @param string   $original_template Original template file path
+ * @param string   $icon_prefix       Icon prefix (fa fa-)
+ *}
+{layout $original_template}
+
+{block table-class}{include #parent} dataTable{/block}
+
+{block header}
+	<tr>
+		<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
+			<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
+		</th>
+
+		{foreach $columns as $key => $column}
+			{var $th = $column->getElementPrototype('th', $key)}
+			{if $column->isSortable()}
+				{? $th->addClass('sorting')}
+			{/if}
+			{if $column->isSortedBy()}
+				{? $th->addClass($column->isSortAsc() ? 'sorting_asc' : 'sorting_desc')}
+			{/if}
+			{!$th->startTag()}
+				{var $col_header = 'col-' . $key . '-header'}
+
+				{**
+				 * Column header can be defined also with block {col-<key>-header}
+				 *}
+				{ifset #$col_header}
+					{include #$col_header, column => $column}
+				{else}
+					<a n:tag-if="$column->isSortable()" n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
+						{_$column->getName()}
+					</a>
+
+					<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
+						<div class="btn-group">
+							<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="{$icon_prefix}caret-down"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu--grid">
+								<li>
+									<a n:href="hideColumn!, column => $key" class="ajax">
+										<span class="{$icon_prefix}eye-slash"></span> {_'ublaboo_datagrid.hide_column'}</a>
+								</li>
+							</ul>
+						</div>
+					</span>
+				{/ifset}
+			{!$th->endTag()}
+		{/foreach}
+		<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
+			{_'ublaboo_datagrid.action'}
+		</th>
+	</tr>
+	<tr n:if="$filters">
+		<th n:foreach="$columns as $key => $column">
+			{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
+				{var $i = $filter['filter'][$key]}
+				{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
+			{/if}
+		</th>
+		<th n:if="$actions || $control->isSortable() || $items_detail"></th>
+	</tr>
+{/block}
