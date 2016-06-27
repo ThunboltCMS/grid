@@ -17,8 +17,8 @@ class GridCase {
 	/** @var IGridFactory */
 	private $gridFactory;
 
-	/** @var IPresenter|Presenter|\Nette\Application\UI\Presenter */
-	private $presenter;
+	/** @var Application */
+	private $application;
 
 	/** @var User */
 	private $user;
@@ -30,7 +30,7 @@ class GridCase {
 								User $user, Notifications $notifications = NULL) {
 		$this->entityManager = $entityManager;
 		$this->gridFactory = $gridFactory;
-		$this->presenter = $application;
+		$this->application = $application;
 		$this->user = $user;
 		$this->notifications = $notifications;
 	}
@@ -53,7 +53,7 @@ class GridCase {
 	 * @return Application|IPresenter|\Nette\Application\UI\Presenter|Presenter
 	 */
 	public function getPresenter() {
-		return $this->presenter;
+		return $this->application->getPresenter();
 	}
 
 	/**
