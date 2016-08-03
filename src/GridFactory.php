@@ -17,7 +17,7 @@ class Grid extends DataGrid {
 		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new BooleanColumn($this, $column, $name));
+		return $this->addColumn($key, new BooleanColumn($this, $key, $column, $name));
 	}
 
 	public function addColumnDateTime($key, $name, $column = NULL) {
