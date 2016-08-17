@@ -12,17 +12,16 @@ class GridFactory implements IGridFactory {
 	/** @var ITranslator */
 	private $translator;
 
-	/** @var Presenter|IPresenter */
-	private $presenter;
+	/** @var Application */
+	private $application;
 
 	/**
 	 * @param ITranslator $translator
+	 * @param Application $application
 	 */
 	public function __construct(ITranslator $translator = NULL, Application $application = NULL) {
-		if ($application) {
-			$this->presenter = $application->getPresenter();
-		}
 		$this->translator = $translator;
+		$this->application = $application;
 	}
 
 	/**
@@ -33,7 +32,7 @@ class GridFactory implements IGridFactory {
 		if ($this->translator) {
 			$grid->setTranslator($this->translator);
 		}
-		if ($this->presenter->names['module'] === 'Admin') {
+		if ($this->application && $this->application->getPresenter() && $this->application->getPresenter()->names['module'] === 'Admin') {
 			$grid->setAdminTemplate();
 		}
 
