@@ -38,7 +38,7 @@
 								{if $action->hasTemplate()}
 									{include $action->getTemplate(), item => $tmp_row->getItem()}
 								{else}
-									{!$action->render($tmp_row)}
+									{$action->render($tmp_row)|noescape}
 								{/if}
 							{/foreach}
 
@@ -73,7 +73,7 @@
 									{if $column->isTemplateEscaped()}
 										{$column->render($row)}
 									{else}
-										{!$column->render($row)}
+										{$column->render($row)|noescape}
 									{/if}
 								{/ifset}
 							{/if}
@@ -98,7 +98,7 @@
 											{if $column->isTemplateEscaped()}
 												{$column->render($row)}
 											{else}
-												{!$column->render($row)}
+												{$column->render($row)|noescape}
 											{/if}
 										{/ifset}
 									{/if}
@@ -111,7 +111,7 @@
 									{if $action->hasTemplate()}
 										{include $action->getTemplate(), item => $item}
 									{else}
-										{!$action->render($row)}
+										{$action->render($row)|noescape}
 									{/if}
 								{/foreach}
 

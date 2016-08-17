@@ -16,18 +16,18 @@
 {block header}
 	<tr>
 		<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
-			<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
+			<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{$control->getName()|noespace}" data-check-all="{$control->getName()}">
 		</th>
 
 		{foreach $columns as $key => $column}
 			{var $th = $column->getElementPrototype('th', $key)}
 			{if $column->isSortable()}
-				{? $th->addClass('sorting')}
+				{php $th->addClass('sorting')}
 			{/if}
 			{if $column->isSortedBy()}
-				{? $th->addClass($column->isSortAsc() ? 'sorting_asc' : 'sorting_desc')}
+				{php $th->addClass($column->isSortAsc() ? 'sorting_asc' : 'sorting_desc')}
 			{/if}
-			{!$th->startTag()}
+			{$th->startTag()|noescape}
 				{var $col_header = 'col-' . $key . '-header'}
 
 				{**
@@ -54,7 +54,7 @@
 						</div>
 					</span>
 				{/ifset}
-			{!$th->endTag()}
+			{$th->endTag()|noescape}
 		{/foreach}
 		<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
 			{_'ublaboo_datagrid.action'}
