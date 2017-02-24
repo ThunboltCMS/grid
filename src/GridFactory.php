@@ -2,36 +2,39 @@
 
 namespace Thunbolt\Grid;
 
-use Nette;
-use Ublaboo\DataGrid\DataGrid;
-use Thunbolt\Grid\Columns\BooleanColumn;
-use WebChemistry\Utils\DateTime;
+use Nette\Application\Application;
+use Nette\Localization\ITranslator;
 
-class Grid extends DataGrid {
+class GridFactory implements IGridFactory {
 
-	public function setAdminTemplate() {
-		$this->setTemplateFile(__DIR__ . '/templates/grid.latte');
+	/** @var ITranslator */
+	private $translator;
+
+	/** @var Application */
+	private $application;
+
+	/**
+	 * @param ITranslator $translator
+	 * @param Application $application
+	 */
+	public function __construct(ITranslator $translator = NULL, Application $application = NULL) {
+		$this->translator = $translator;
+		$this->application = $application;
 	}
 
-	public function addColumnBool($key, $name, $column = NULL) {
-		$this->addColumnCheck($key);
-		$column = $column ?: $key;
+	/**
+	 * @return Grid
+	 */
+	public function create() {
+		$grid = new Grid();
+		if ($this->translator) {
+			$grid->setTranslator($this->translator);
+		}
+		if ($this->application && $this->application->getPresenter() && $this->application->getPresenter()->names['module'] === 'Admin') {
+			$grid->setAdminTemplate();
+		}
 
-		return $this->addColumn($key, new BooleanColumn($this, $key, $column, $name));
-	}
-
-	public function addColumnDateTime($key, $name, $column = NULL) {
-		$control = parent::addColumnDateTime($key, $name, $column);
-		$control->setFormat(DateTime::$datetime);
-
-		return $control;
-	}
-
-	public function addColumnDate($key, $name, $column = NULL) {
-		$control = parent::addColumnDateTime($key, $name, $column);
-		$control->setFormat(DateTime::$date);
-
-		return $control;
+		return $grid;
 	}
 
 }
