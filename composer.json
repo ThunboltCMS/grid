@@ -1,7 +1,7 @@
 {
 	"name": "thunbolt/grid",
 	"require": {
-		"ublaboo/datagrid": "^4.3.1"
+		"ublaboo/datagrid": "dev-master"
 	},
 	"autoload": {
 		"classmap": ["src/"]
